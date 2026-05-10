@@ -1,0 +1,111 @@
+
+Building multimodal data pipelines (see image in current directory for e2e pipeline)
+
+	Extracting structured and semi-structured data can be done through traditional data-pipelines.
+
+	Unstructured data (such as images, videos and audio) is different because it contains:
+	- speech
+	- speakers identity, tone, emotion
+	- text
+	- charts
+	- diagrams
+	- spatial layout
+	- audio visual frames
+	- motion and temporal structure
+
+Traditional techniques to extract information from unstructured data are:
+
+	- ASR (automatic speech recognition)
+	- OCR (optical character recognition)
+
+VLM's (vision language models)
+
+	Latest approach to extracting signal from unstructured data.
+
+	Takes as input: image/video-frame + user's prompt (i.e. a question about the image/video-frame)
+
+	Output: Answers the question in the context of the image.
+
+	They understand and reason about a scene, story, context and meaning.
+
+	Videos often has 30-60 frames per second (fps) so a frame sampling is usually necessary. High sampling -> more understanding, and vice-versa.
+
+	Deployment:
+
+		- They are resource intensive and require GPU's
+		- Typically deployed via containers for portability across architecture
+		- Container spec defines the resource available to the model (compute, memory, networking, etc)
+		- Also includes VLM-oriented specs (prompts, prompt-engineering information, output specifications)
+		- Container can then be run inside the data platform alongside other workflows
+
+	Chunking videos from embeddings:
+
+		- Segment embeddings: one embedding per VLM-generated segment
+			- Balances granularity and efficiency
+			- Aligns with how humans think about video (scenes, segments)
+
+		- Frame embeddings: one embedding per sampled frame
+			- Very precise temporal localization ("find the exact moment when...")
+			- Expensive, due to many vectors to store and search
+
+		- Video embeddings: one embedding for the entire video
+			- Cheap and simple, good for video-to-video similarity ("find similar videos")
+
+Audio Processing
+
+	- Raw audio is not well-suited for traditional search
+	- ASR converts spoken audio into text
+	- ASR uses transformer-based models to process audio signals
+	- Modern ASR's can handle: speaker accents, background noise, multiple speakers, and more
+
+OCR
+
+	- Extracts text trapped in images - slides, screenshots, and other scanned documents
+
+Semantic search
+
+	- Text -> vector representations
+	- Embedding models have input limits
+	- Large documents exceed these limits
+	- Text is usually "chunked" before being processed by an embedding model
+	- Chunking also improves retrieval precision, smaller chunks give more targeted results. Large chunks -> exceeds model limits, dilutes relevance, and retrieves too much. Smaller chunks -> loses context, fragments meaning, retrieves too little.
+
+	Best chunking strategy: fixed-size chunking with overlap
+
+	- simple approach: split every N tokens/characters
+	- overlap: include some text from previous chunk
+	- prevents cutting sentences mid-thought
+	- ensures context at boundaries isn't lost
+	- example: 500-token chunks with 50-token overlap
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
